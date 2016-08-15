@@ -84,11 +84,11 @@ module props_unit_test;
     `SVTEST_END
 
 
-    `SVTEST(trans_held_until_ready__ready_at_trans_start__passes)
+    `SVTEST(trans_held_until_ready__ready_at_trans_start__vacuous)
       cb.HTRANS <= NONSEQ;
       cb.HREADY <= 1;
 
-      `FAIL_UNLESS_PROP(trans_held_until_ready(HTRANS, HREADY))
+      `FAIL_UNLESS_PROP_VAC(trans_held_until_ready(HTRANS, HREADY))
     `SVTEST_END
 
   `SVUNIT_TESTS_END
