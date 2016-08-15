@@ -14,6 +14,6 @@
 
 
 property trans_held_until_ready(HTRANS, HREADY);
-  HTRANS inside { NONSEQ, SEQ } |=>
-    $stable(HTRANS) throughout HREADY [->1];
+  HTRANS inside { NONSEQ, SEQ } |->
+    HREADY or ##1 ($stable(HTRANS) throughout HREADY [->1]);
 endproperty
