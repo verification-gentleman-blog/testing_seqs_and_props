@@ -11,3 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+
+sequence trans_started(HTRANS, HREADY);
+  HTRANS inside { NONSEQ, SEQ } &&
+    $past(HTRANS inside { IDLE, BUSY } || HREADY);
+endsequence
