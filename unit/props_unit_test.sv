@@ -25,10 +25,16 @@ module props_unit_test;
   import vgm_ahb::*;
 
 
-  bit clk;
-  always #1 clk = ~clk;
+  bit HCLK;
+  bit [1:0] HTRANS;
+  bit HREADY;
 
-  default clocking @(posedge clk);
+
+  always #1 HCLK = ~HCLK;
+
+  default clocking cb @(posedge HCLK);
+    inout HTRANS;
+    inout HREADY;
   endclocking
 
 
@@ -51,14 +57,39 @@ module props_unit_test;
 
   `SVUNIT_TESTS_BEGIN
 
-    `SVTEST(drive_awvalid__with_delay)
-      `FAIL_IF(1)
+    `SVTEST(trans_held_until_ready__trans_stable__passes)
+      cb.HTRANS <= NONSEQ;
+      cb.HREADY <= 0;
+      cb.HREADY <= ##3 1;
+
+      `FAIL_UNLESS_PROP(trans_held_until_ready(HTRANS, HREADY))
+    `SVTEST_END
+
+
+    `SVTEST(trans_held_until_ready__trans_changes__fails)
+      cb.HTRANS <= NONSEQ;
+      cb.HREADY <= 0;
+      cb.HTRANS <= ##3 SEQ;
+
+      `FAIL_IF_PROP(trans_held_until_ready(HTRANS, HREADY))
+    `SVTEST_END
+
+
+    `SVTEST(trans_held_until_ready__trans_changes_immediately__fails)
+      cb.HTRANS <= NONSEQ;
+      cb.HREADY <= 0;
+      cb.HTRANS <= ##1 SEQ;
+
+      `FAIL_IF_PROP(trans_held_until_ready(HTRANS, HREADY))
     `SVTEST_END
 
   `SVUNIT_TESTS_END
 
 
   task reset_signals();
+    HTRANS <= IDLE;
+    HREADY <= 1;
+    ##1;
   endtask
 
 endmodule

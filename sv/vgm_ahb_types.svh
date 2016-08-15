@@ -13,9 +13,4 @@
 // limitations under the License.
 
 
-package vgm_ahb;
-  `include "vgm_ahb_types.svh"
-
-  `include "vgm_ahb_seqs.svh"
-  `include "vgm_ahb_props.svh"
-endpackage
+typedef enum { IDLE, BUSY, NONSEQ, SEQ } trans_kind_e;
