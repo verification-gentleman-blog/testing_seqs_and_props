@@ -1,0 +1,10 @@
+*.log
+
+INCA_libs
+*.shm
+.simvision
+*.history
+
+.__testsuite.sv
+.testrunner.sv
+.svunit.f
