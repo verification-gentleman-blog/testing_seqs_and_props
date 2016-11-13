@@ -90,6 +90,27 @@ module seqs_unit_test;
       `FAIL_UNLESS_SEQ(##1 trans_started(HTRANS, HREADY))
     `SVTEST_END
 
+
+    `SVTEST(addr_phase__trans_started_and_granted_simultaneously__matches)
+      cb.HTRANS <= NONSEQ;
+      cb.HREADY <= 1;
+
+      // Not 100% correct, because sequence starts matching due to default
+      // value used in embedded $past(...).
+      `FAIL_UNLESS_SEQ(addr_phase(HTRANS, HREADY))
+    `SVTEST_END
+
+
+    `SVTEST(addr_phase__trans_started_and_not_granted__doesnt_match)
+      cb.HTRANS <= NONSEQ;
+      cb.HREADY <= 0;
+
+      fork
+        `FAIL_IF_SEQ(addr_phase(HTRANS, HREADY))
+        ##5;
+      join_any
+    `SVTEST_END
+
   `SVUNIT_TESTS_END
 
 

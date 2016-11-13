@@ -17,3 +17,8 @@ sequence trans_started(HTRANS, HREADY);
   HTRANS inside { NONSEQ, SEQ } &&
     $past(HTRANS inside { IDLE, BUSY } || HREADY);
 endsequence
+
+
+sequence addr_phase(HTRANS, HREADY);
+  trans_started(HTRANS, HREADY) ##0 HREADY [->1];
+endsequence
